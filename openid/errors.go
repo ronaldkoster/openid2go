@@ -2,6 +2,7 @@ package openid
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/dgrijalva/jwt-go"
@@ -91,6 +92,7 @@ func (ve ValidationError) Error() string {
 
 // jwtErrorToOpenIdError converts errors of the type *jwt.ValidationError returned during token validation into errors of type *ValidationError
 func jwtErrorToOpenIdError(e error) *ValidationError {
+	log.Printf("got jtw openID error %v", e)
 	if jwtError, ok := e.(*jwt.ValidationError); ok {
 		if (jwtError.Errors & (jwt.ValidationErrorNotValidYet | jwt.ValidationErrorExpired | jwt.ValidationErrorSignatureInvalid)) != 0 {
 			return &ValidationError{Code: ValidationErrorJwtValidationFailure, Message: "Jwt token validation failed.", HTTPStatus: http.StatusUnauthorized}
